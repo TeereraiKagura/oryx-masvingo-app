@@ -118,9 +118,11 @@
             return;
         }
 
-        // Format the message for WhatsApp
-        const message = `📦 *NEW ORYX ORDER* 📦%0A%0A*Name:* ${name}%0A*Pickup:* ${pickup}%0A*Delivery To:* ${address}%0A*Order:* ${details}%0A%0A_Sent via Oryx Web App_`;
+       // Calculate base fee from flyer
+        const baseFee = "$2.00"; 
 
+        // Format the message for WhatsApp (Now with calculation)
+        const message = `📦 *NEW ORYX ORDER* 📦%0A%0A*Name:* ${name}%0A*Pickup:* ${pickup}%0A*Delivery To:* ${address}%0A*Order:* ${details}%0A%0A*Est. Delivery Fee:* ${baseFee} (Base)%0A%0A_Sent via Oryx Web App_`;
         // The number from their flyer: 0779499618
         // Formatted for Zimbabwe country code: 263779499618
         const oryxNumber = "263779499618"; 
