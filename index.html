@@ -3,135 +3,663 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oryx Deliveries | Order Now</title>
+    <title>Oryx — Delivery & Car Rental</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-orange: #ff6b00; /* Matching their flyer */
-            --dark-bg: #1a1a1a;
-            --light-text: #ffffff;
+            --orange: #FF5500;
+            --orange-dark: #CC4400;
+            --orange-glow: rgba(255,85,0,0.15);
+            --black: #0D0D0D;
+            --surface: #181818;
+            --surface2: #222222;
+            --border: rgba(255,255,255,0.08);
+            --text: #F0EDE8;
+            --muted: #888;
+            --success: #2ECC71;
+            --error: #FF4444;
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f4f9;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-        }
-        .app-container {
-            background-color: white;
-            width: 100%;
-            max-width: 400px; /* Mobile app feel */
+            font-family: 'DM Sans', sans-serif;
+            background: var(--black);
+            color: var(--text);
             min-height: 100vh;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
             display: flex;
             flex-direction: column;
+            align-items: center;
+            padding: 24px 16px 60px;
+            position: relative;
+            overflow-x: hidden;
         }
-        .header {
-            background-color: var(--dark-bg);
-            color: var(--primary-orange);
+
+        /* Background texture */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 50% at 50% -10%, rgba(255,85,0,0.12) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 30% at 80% 80%, rgba(255,85,0,0.06) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Grain overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .wrapper {
+            width: 100%;
+            max-width: 480px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        header {
             text-align: center;
-            padding: 20px;
-            font-size: 24px;
-            font-weight: bold;
+            margin-bottom: 36px;
+            animation: fadeDown 0.6s ease both;
+        }
+
+        .logo-mark {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--orange);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 0 24px rgba(255,85,0,0.4);
+        }
+
+        .logo-text {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 42px;
+            letter-spacing: 3px;
+            color: var(--text);
+            line-height: 1;
+        }
+
+        .tagline {
+            font-size: 13px;
+            color: var(--muted);
+            letter-spacing: 2px;
             text-transform: uppercase;
+            font-weight: 500;
         }
-        .form-container {
-            padding: 20px;
-            flex-grow: 1;
+
+        /* Service selector tabs */
+        .service-tabs {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 28px;
+            animation: fadeUp 0.6s 0.1s ease both;
         }
-        label {
-            font-weight: bold;
-            margin-top: 15px;
+
+        .tab {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--orange);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .tab.active::before { opacity: 1; }
+        .tab.active { border-color: var(--orange); box-shadow: 0 0 20px rgba(255,85,0,0.25); }
+
+        .tab:hover:not(.active) { border-color: rgba(255,85,0,0.4); background: var(--surface2); }
+
+        .tab-icon {
+            font-size: 22px;
             display: block;
-            color: #333;
+            margin-bottom: 6px;
+            position: relative;
+            z-index: 1;
         }
+
+        .tab-label {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 1;
+            line-height: 1.3;
+        }
+
+        /* Form card */
+        .form-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 28px;
+            animation: fadeUp 0.5s 0.15s ease both;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+        }
+
+        .form-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 26px;
+            letter-spacing: 2px;
+            color: var(--orange);
+            margin-bottom: 4px;
+        }
+
+        .form-subtitle {
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 24px;
+        }
+
+        /* Fields */
+        .field {
+            margin-bottom: 18px;
+        }
+
+        .field-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--muted);
+            margin-bottom: 7px;
+        }
+
         input, select, textarea {
             width: 100%;
-            padding: 12px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 16px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 13px 16px;
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            -webkit-appearance: none;
         }
+
+        input::placeholder, textarea::placeholder { color: #444; }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--orange);
+            box-shadow: 0 0 0 3px var(--orange-glow);
+        }
+
+        input.error, select.error, textarea.error {
+            border-color: var(--error);
+            box-shadow: 0 0 0 3px rgba(255,68,68,0.1);
+        }
+
+        select option { background: var(--surface2); color: var(--text); }
+
+        textarea { resize: vertical; min-height: 80px; }
+
+        .field-error {
+            font-size: 12px;
+            color: var(--error);
+            margin-top: 5px;
+            display: none;
+        }
+
+        .field-error.show { display: block; }
+
+        /* Price estimate box */
+        .price-estimate {
+            background: var(--orange-glow);
+            border: 1px solid rgba(255,85,0,0.25);
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .price-label {
+            font-size: 12px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .price-value {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 28px;
+            color: var(--orange);
+            letter-spacing: 1px;
+        }
+
+        .price-note {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        /* Info note */
+        .info-note {
+            font-size: 12px;
+            color: var(--muted);
+            background: rgba(255,255,255,0.03);
+            border-left: 3px solid var(--orange);
+            padding: 10px 14px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 18px;
+            line-height: 1.6;
+        }
+
+        /* Submit button */
         .btn-submit {
-            background-color: var(--primary-orange);
+            width: 100%;
+            padding: 18px;
+            background: var(--orange);
             color: white;
             border: none;
-            padding: 15px;
-            width: 100%;
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 8px;
+            border-radius: 12px;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 20px;
+            letter-spacing: 2px;
             cursor: pointer;
-            margin-top: 25px;
-            transition: background 0.3s;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 8px 24px rgba(255,85,0,0.3);
+            position: relative;
+            overflow: hidden;
+            margin-top: 8px;
         }
+
+        .btn-submit::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 60%);
+        }
+
         .btn-submit:hover {
-            background-color: #e65c00;
+            background: var(--orange-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(255,85,0,0.4);
+        }
+
+        .btn-submit:active { transform: translateY(0); }
+
+        .btn-submit.loading {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        /* Success state */
+        .success-banner {
+            display: none;
+            background: rgba(46,204,113,0.1);
+            border: 1px solid rgba(46,204,113,0.3);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-top: 16px;
+            text-align: center;
+            color: var(--success);
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        .success-banner.show { display: block; animation: fadeUp 0.4s ease; }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 20px 0;
+        }
+
+        /* Animations */
+        @keyframes fadeDown {
+            from { opacity: 0; transform: translateY(-16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            display: none;
+        }
+
+        .btn-submit.loading .spinner { display: block; }
+        .btn-submit.loading .btn-text { display: none; }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 28px;
+            font-size: 12px;
+            color: #444;
+            z-index: 1;
+            position: relative;
         }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    <div class="header">
-        ORYX Deliveries
+<div class="wrapper">
+    <header>
+        <div class="logo-mark">
+            <div class="logo-icon">🦬</div>
+            <div class="logo-text">ORYX</div>
+        </div>
+        <p class="tagline">Masvingo · Harare · Nationwide</p>
+    </header>
+
+    <div class="service-tabs">
+        <div class="tab active" onclick="switchTab('local', this)">
+            <span class="tab-icon">🛵</span>
+            <span class="tab-label">Local Delivery</span>
+        </div>
+        <div class="tab" onclick="switchTab('intercity', this)">
+            <span class="tab-icon">🚚</span>
+            <span class="tab-label">Intercity Freight</span>
+        </div>
+        <div class="tab" onclick="switchTab('carRental', this)">
+            <span class="tab-icon">🚗</span>
+            <span class="tab-label">Car Rental</span>
+        </div>
     </div>
-    
-    <div class="form-container">
-        <p style="text-align: center; color: #666;">Fast delivery from $2.00</p>
-        
-        <label for="customerName">Your Name</label>
-        <input type="text" id="customerName" placeholder="e.g., John Doe" required>
 
-        <label for="pickupLocation">Pickup From</label>
-        <select id="pickupLocation">
-            <option value="KFC">KFC</option>
-            <option value="Pizza Inn">Pizza Inn</option>
-            <option value="Pick n Pay">Pick n Pay (Groceries)</option>
-            <option value="Other">Other Outlet</option>
-        </select>
-
-        <label for="dropoffAddress">Delivery Address</label>
-        <input type="text" id="dropoffAddress" placeholder="e.g., 123 Burnside Road" required>
-
-        <label for="orderDetails">What are we getting for you?</label>
-        <textarea id="orderDetails" rows="3" placeholder="e.g., 21-piece bucket and 2L Coke" required></textarea>
-
-        <button class="btn-submit" onclick="submitOrder()">SEND ORDER</button>
+    <div class="form-card">
+        <div id="formContainer"></div>
+        <button class="btn-submit" onclick="sendOrder()">
+            <span class="spinner"></span>
+            <span class="btn-text">📲 &nbsp;SEND TO ORYX</span>
+        </button>
+        <div class="success-banner" id="successBanner">
+            ✅ &nbsp;Order sent! Oryx will contact you shortly to confirm details and pricing.
+        </div>
     </div>
 </div>
 
-<script>
-    function submitOrder() {
-        // Get values from the form
-        const name = document.getElementById('customerName').value;
-        const pickup = document.getElementById('pickupLocation').value;
-        const address = document.getElementById('dropoffAddress').value;
-        const details = document.getElementById('orderDetails').value;
+<footer>© 2026 Oryx Delivery · Masvingo, Zimbabwe</footer>
 
-        // Basic validation
-        if(!name || !address || !details) {
-            alert("Please fill in all fields so we can deliver your food fast!");
-            return;
+<script>
+    let currentType = 'local';
+
+    const ORYX_NUMBER = "263779499618";
+
+    function switchTab(type, el) {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
+        currentType = type;
+        loadForm(type);
+        document.getElementById('successBanner').classList.remove('show');
+    }
+
+    function field(label, inputHTML, id, required = true) {
+        return `
+            <div class="field">
+                <label for="${id}">${label}${required ? ' <span style="color:var(--orange)">*</span>' : ''}</label>
+                ${inputHTML}
+                <div class="field-error" id="${id}-error">This field is required.</div>
+            </div>`;
+    }
+
+    function input(id, placeholder, type = 'text') {
+        return `<input type="${type}" id="${id}" placeholder="${placeholder}" oninput="clearError('${id}')">`;
+    }
+
+    function loadForm(type = 'local') {
+        const c = document.getElementById('formContainer');
+
+        if (type === 'local') {
+            c.innerHTML = `
+                <div class="form-title">Local Delivery</div>
+                <p class="form-subtitle">Fast parcel & errand delivery within Masvingo</p>
+                ${field('Your Name', input('name','E.g. Tendai Moyo'), 'name')}
+                ${field('Phone Number', input('phone','+263 77 123 4567','tel'), 'phone')}
+                <div class="field">
+                    <label for="pickup">Pickup Location <span style="color:var(--orange)">*</span></label>
+                    <input type="text" id="pickup" placeholder="E.g. KFC Masvingo, Pick n Pay" oninput="clearError('pickup')">
+                    <div class="field-error" id="pickup-error">This field is required.</div>
+                </div>
+                <div class="field">
+                    <label for="address">Delivery Address <span style="color:var(--orange)">*</span></label>
+                    <input type="text" id="address" placeholder="E.g. 14 Hughes St, Rhodene" oninput="clearError('address')">
+                    <div class="field-error" id="address-error">This field is required.</div>
+                </div>
+                <div class="field">
+                    <label for="details">Order Details <span style="color:var(--orange)">*</span></label>
+                    <textarea id="details" placeholder="What are we picking up? Describe item, quantity, special instructions..." oninput="clearError('details')"></textarea>
+                    <div class="field-error" id="details-error">This field is required.</div>
+                </div>
+                <div class="info-note">🛵 Base delivery fee from <strong>$2.00</strong>. Final price depends on distance and weight. Oryx will confirm before pickup.</div>`;
         }
 
-       // Calculate base fee from flyer
-        const baseFee = "$2.00"; 
+        else if (type === 'intercity') {
+            c.innerHTML = `
+                <div class="form-title">Intercity Freight</div>
+                <p class="form-subtitle">Reliable parcel shipping between Harare & Masvingo</p>
+                ${field('Your Name', input('name','E.g. Chiedza Mupfumi'), 'name')}
+                ${field('Phone Number', input('phone','+263 77 123 4567','tel'), 'phone')}
+                <div class="field">
+                    <label for="direction">Direction <span style="color:var(--orange)">*</span></label>
+                    <select id="direction" oninput="clearError('direction')">
+                        <option value="HRE_to_MSV">Harare → Masvingo</option>
+                        <option value="MSV_to_HRE">Masvingo → Harare</option>
+                        <option value="both">Both Ways (Return)</option>
+                    </select>
+                    <div class="field-error" id="direction-error">Please select a direction.</div>
+                </div>
+                ${field('Harare Address (Pickup/Dropoff)', input('hreAddress','E.g. 42 Samora Machel Ave, CBD'), 'hreAddress')}
+                ${field('Masvingo Address (Pickup/Dropoff)', input('msvAddress','E.g. 7 Robert Mugabe Rd'), 'msvAddress')}
+                <div class="field">
+                    <label for="details">Package Details & Weight Estimate <span style="color:var(--orange)">*</span></label>
+                    <textarea id="details" placeholder="E.g. 3 boxes of clothes, approx 15kg. Handle with care." oninput="clearError('details')"></textarea>
+                    <div class="field-error" id="details-error">This field is required.</div>
+                </div>
+                <div class="info-note">🚚 Pricing based on weight and volume. Fragile or oversized items may attract an additional handling fee. We'll confirm cost before departure.</div>`;
+        }
 
-        // Format the message for WhatsApp (Now with calculation)
-        const message = `📦 *NEW ORYX ORDER* 📦%0A%0A*Name:* ${name}%0A*Pickup:* ${pickup}%0A*Delivery To:* ${address}%0A*Order:* ${details}%0A%0A*Est. Delivery Fee:* ${baseFee} (Base)%0A%0A_Sent via Oryx Web App_`;
-        // The number from their flyer: 263776758093
-        // Formatted for Zimbabwe country code: 263776758093
-        const oryxNumber = "263776758093"; 
-        
-        // Redirect the user to WhatsApp
-        const whatsappUrl = `https://wa.me/${oryxNumber}?text=${message}`;
-        window.open(whatsappUrl, '_blank');
+        else if (type === 'carRental') {
+            c.innerHTML = `
+                <div class="form-title">Car Rental</div>
+                <p class="form-subtitle">Fuel savers and reliable vehicles for your journey</p>
+                ${field('Your Name', input('name','E.g. Farai Zimuto'), 'name')}
+                ${field('Phone Number', input('phone','+263 77 123 4567','tel'), 'phone')}
+                <div class="field-row">
+                    ${field('Start Date', `<input type="date" id="date" oninput="updateEstimate(); clearError('date')">`, 'date')}
+                    ${field('Number of Days', `<input type="number" id="days" placeholder="E.g. 3" min="1" oninput="updateEstimate(); clearError('days')">`, 'days')}
+                </div>
+                <div class="field">
+                    <label for="vehicle">Vehicle Preference <span style="color:var(--orange)">*</span></label>
+                    <select id="vehicle" onchange="clearError('vehicle')">
+                        <option value="Fuel Saver (Toyota Aqua / Honda Fit)">Fuel Saver — Toyota Aqua / Honda Fit</option>
+                        <option value="Sedan (Toyota Corolla / similar)">Sedan — Toyota Corolla / similar</option>
+                        <option value="SUV / 4x4">SUV / 4x4</option>
+                        <option value="Any available">Any available</option>
+                    </select>
+                    <div class="field-error" id="vehicle-error">Please select a vehicle type.</div>
+                </div>
+                <div class="field">
+                    <label for="pickup">Pickup Location</label>
+                    <input type="text" id="pickup" placeholder="E.g. Masvingo CBD, airport, hotel name">
+                </div>
+                <div class="field">
+                    <label for="driver">Driver Required?</label>
+                    <select id="driver">
+                        <option value="No – self-drive">No – self-drive</option>
+                        <option value="Yes – driver needed">Yes – driver needed</option>
+                    </select>
+                </div>
+                <div class="price-estimate" id="priceEstimate" style="display:none">
+                    <div>
+                        <div class="price-label">Estimated Total</div>
+                        <div class="price-note">Fuel saver · 200km/day</div>
+                    </div>
+                    <div class="price-value" id="estimateVal">$0</div>
+                </div>
+                <div class="info-note">🚗 Fuel savers from <strong>$45/day</strong> (200km included). Excess mileage charged at rate per km. Deposit may be required.</div>`;
+        }
     }
-</script>
 
+    function updateEstimate() {
+        const days = parseInt(document.getElementById('days')?.value) || 0;
+        const box = document.getElementById('priceEstimate');
+        const val = document.getElementById('estimateVal');
+        if (!box || !val) return;
+        if (days > 0) {
+            box.style.display = 'flex';
+            val.textContent = `$${(days * 45).toFixed(0)}`;
+        } else {
+            box.style.display = 'none';
+        }
+    }
+
+    function clearError(id) {
+        const el = document.getElementById(id);
+        const err = document.getElementById(id + '-error');
+        if (el) el.classList.remove('error');
+        if (err) err.classList.remove('show');
+    }
+
+    function showError(id, msg) {
+        const el = document.getElementById(id);
+        const err = document.getElementById(id + '-error');
+        if (el) el.classList.add('error');
+        if (err) { if (msg) err.textContent = msg; err.classList.add('show'); }
+    }
+
+    function getVal(id) {
+        return document.getElementById(id)?.value?.trim() || '';
+    }
+
+    function validateAndBuild() {
+        let valid = true;
+        let message = '';
+
+        const name = getVal('name');
+        const phone = getVal('phone');
+
+        if (!name) { showError('name'); valid = false; }
+        if (!phone) { showError('phone'); valid = false; }
+
+        if (currentType === 'local') {
+            const pickup = getVal('pickup');
+            const address = getVal('address');
+            const details = getVal('details');
+            if (!pickup) { showError('pickup'); valid = false; }
+            if (!address) { showError('address'); valid = false; }
+            if (!details) { showError('details'); valid = false; }
+            if (valid) {
+                message = `🛵 *LOCAL DELIVERY REQUEST*\n\n*Name:* ${name}\n*Phone:* ${phone}\n*Pickup From:* ${pickup}\n*Deliver To:* ${address}\n*Order:* ${details}\n\n_Base fee from $2.00 — final price TBC_`;
+            }
+        }
+
+        else if (currentType === 'intercity') {
+            const direction = getVal('direction');
+            const hre = getVal('hreAddress');
+            const msv = getVal('msvAddress');
+            const details = getVal('details');
+            if (!hre) { showError('hreAddress'); valid = false; }
+            if (!msv) { showError('msvAddress'); valid = false; }
+            if (!details) { showError('details'); valid = false; }
+            const dirLabel = direction === 'HRE_to_MSV' ? 'Harare → Masvingo' : direction === 'MSV_to_HRE' ? 'Masvingo → Harare' : 'Both Ways (Return)';
+            if (valid) {
+                message = `🚚 *INTERCITY FREIGHT REQUEST*\n\n*Name:* ${name}\n*Phone:* ${phone}\n*Direction:* ${dirLabel}\n*Harare Address:* ${hre}\n*Masvingo Address:* ${msv}\n*Package Details:* ${details}\n\n_Pricing to be confirmed by Oryx_`;
+            }
+        }
+
+        else if (currentType === 'carRental') {
+            const date = getVal('date');
+            const days = getVal('days');
+            const vehicle = getVal('vehicle');
+            const pickup = getVal('pickup') || 'Not specified';
+            const driver = getVal('driver');
+            if (!date) { showError('date'); valid = false; }
+            if (!days || parseInt(days) < 1) { showError('days', 'Enter at least 1 day.'); valid = false; }
+            const est = days ? `$${(parseInt(days) * 45).toFixed(0)} (estimate)` : 'TBC';
+            if (valid) {
+                message = `🚗 *CAR RENTAL INQUIRY*\n\n*Name:* ${name}\n*Phone:* ${phone}\n*Vehicle:* ${vehicle}\n*Start Date:* ${date}\n*Duration:* ${days} day(s)\n*Pickup Location:* ${pickup}\n*Driver Required:* ${driver}\n*Est. Cost:* ${est}\n\n_Rate from $45/day · 200km included_`;
+            }
+        }
+
+        return valid ? message : null;
+    }
+
+    function sendOrder() {
+        const message = validateAndBuild();
+        if (!message) return;
+
+        const btn = document.querySelector('.btn-submit');
+        btn.classList.add('loading');
+
+        setTimeout(() => {
+            const url = `https://wa.me/${ORYX_NUMBER}?text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank');
+            btn.classList.remove('loading');
+            document.getElementById('successBanner').classList.add('show');
+            btn.querySelector('.btn-text').innerHTML = '✅ &nbsp;ORDER SENT';
+            setTimeout(() => {
+                btn.querySelector('.btn-text').innerHTML = '📲 &nbsp;SEND TO ORYX';
+            }, 4000);
+        }, 800);
+    }
+
+    // Init
+    loadForm('local');
+</script>
 </body>
 </html>
