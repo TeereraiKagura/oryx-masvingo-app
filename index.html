@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oryx Deliveries | Order Now</title>
+    <style>
+        :root {
+            --primary-orange: #ff6b00; /* Matching their flyer */
+            --dark-bg: #1a1a1a;
+            --light-text: #ffffff;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+        .app-container {
+            background-color: white;
+            width: 100%;
+            max-width: 400px; /* Mobile app feel */
+            min-height: 100vh;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            background-color: var(--dark-bg);
+            color: var(--primary-orange);
+            text-align: center;
+            padding: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .form-container {
+            padding: 20px;
+            flex-grow: 1;
+        }
+        label {
+            font-weight: bold;
+            margin-top: 15px;
+            display: block;
+            color: #333;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        .btn-submit {
+            background-color: var(--primary-orange);
+            color: white;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: background 0.3s;
+        }
+        .btn-submit:hover {
+            background-color: #e65c00;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="header">
+        ORYX Deliveries
+    </div>
+    
+    <div class="form-container">
+        <p style="text-align: center; color: #666;">Fast delivery from $2.00</p>
+        
+        <label for="customerName">Your Name</label>
+        <input type="text" id="customerName" placeholder="e.g., John Doe" required>
+
+        <label for="pickupLocation">Pickup From</label>
+        <select id="pickupLocation">
+            <option value="KFC">KFC</option>
+            <option value="Pizza Inn">Pizza Inn</option>
+            <option value="Pick n Pay">Pick n Pay (Groceries)</option>
+            <option value="Other">Other Outlet</option>
+        </select>
+
+        <label for="dropoffAddress">Delivery Address</label>
+        <input type="text" id="dropoffAddress" placeholder="e.g., 123 Burnside Road" required>
+
+        <label for="orderDetails">What are we getting for you?</label>
+        <textarea id="orderDetails" rows="3" placeholder="e.g., 21-piece bucket and 2L Coke" required></textarea>
+
+        <button class="btn-submit" onclick="submitOrder()">SEND ORDER</button>
+    </div>
+</div>
+
+<script>
+    function submitOrder() {
+        // Get values from the form
+        const name = document.getElementById('customerName').value;
+        const pickup = document.getElementById('pickupLocation').value;
+        const address = document.getElementById('dropoffAddress').value;
+        const details = document.getElementById('orderDetails').value;
+
+        // Basic validation
+        if(!name || !address || !details) {
+            alert("Please fill in all fields so we can deliver your food fast!");
+            return;
+        }
+
+        // Format the message for WhatsApp
+        const message = `📦 *NEW ORYX ORDER* 📦%0A%0A*Name:* ${name}%0A*Pickup:* ${pickup}%0A*Delivery To:* ${address}%0A*Order:* ${details}%0A%0A_Sent via Oryx Web App_`;
+
+        // The number from their flyer: 0776758093
+        // Formatted for Zimbabwe country code: 263776758093
+        const oryxNumber = "263776758093"; 
+        
+        // Redirect the user to WhatsApp
+        const whatsappUrl = `https://wa.me/${oryxNumber}?text=${message}`;
+        window.open(whatsappUrl, '_blank');
+    }
+</script>
+
+</body>
+</html>
