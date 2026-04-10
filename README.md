@@ -4,7 +4,7 @@ A streamlined management dashboard designed for localized delivery and vehicle r
 
 ---
 
-## 🚀 Status: UNDER MAINTENANCE
+##  Status: UNDER MAINTENANCE
 **Current State:** The portal is currently in maintenance mode to perform database upgrades and security audits.
 
 * **Kill-Switch Status:** `ACTIVE`
@@ -12,7 +12,7 @@ A streamlined management dashboard designed for localized delivery and vehicle r
 
 ---
 
-## 🛠 Features
+##  Features
 * **Real-time Dashboard:** High-level overview of net profit, revenue, and operating costs.
 * **Inventory Management:** Track stock levels for retail and rental assets.
 * **Transaction Logging:** Simple interface for recording sales and "Stock-In" events.
@@ -21,7 +21,7 @@ A streamlined management dashboard designed for localized delivery and vehicle r
 
 ---
 
-## 🏗 Tech Stack
+## Tech Stack
 * **Frontend:** HTML5, CSS3 (Custom Variables), Vanilla JavaScript.
 * **Backend/Database:** [Supabase](https://supabase.com) (PostgreSQL).
 * **Hosting:** [Vercel](https://vercel.com).
@@ -29,7 +29,7 @@ A streamlined management dashboard designed for localized delivery and vehicle r
 
 ---
 
-## ⚙️ Configuration & Environment Variables
+##  Configuration & Environment Variables
 The app requires the following environment variables set in the Vercel dashboard to communicate with the database:
 
 | Variable | Description |
@@ -39,7 +39,7 @@ The app requires the following environment variables set in the Vercel dashboard
 
 ---
 
-## 🚧 Development & Maintenance
+##  Development & Maintenance
 To toggle the system online/offline:
 1. Open `oryx-portal.html`.
 2. Locate the `MAINTENANCE_MODE` constant in the `<head>`.
@@ -48,6 +48,6 @@ To toggle the system online/offline:
 
 ---
 
-## 👤 Author
+##  Author
 **Teererai Kagura**
 *Lead Developer & Systems Architect*
